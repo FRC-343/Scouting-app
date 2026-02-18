@@ -1,251 +1,237 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Match Scouting</title>
-<style>
+  <title>FRC Scouting Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
 
-body { background:#111; color:white; font-family:Arial; padding:20px; }
-.section { border:1px solid #444; padding:15px; margin-bottom:20px; }
-button { padding:5px 10px; }
-.counter { margin:5px 0; }
-select, input, textarea { margin:5px 0; padding:6px; }
+    h1 {
+      margin-bottom: 10px;
+    }
 
-.field-wrapper {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-}
+    .section {
+      background: #1e1e1e;
+      padding: 15px;
+      margin: 15px auto;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 0 10px rgba(255,0,0,0.3);
+    }
 
-#fieldImage {
-  width: 100%;
-  height: auto;
-  cursor: crosshair;
-  border: 2px solid #555;
-}
+    .counter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
 
-#clickMarker {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: lime;
-  border: 2px solid black;
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  display: none;
-}
+    .counter button {
+      background-color: red;
+      border: none;
+      color: white;
+      font-size: 20px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border-radius: 6px;
+      margin: 0 10px;
+    }
 
-</style>
+    .counter span {
+      font-size: 20px;
+      width: 40px;
+      display: inline-block;
+    }
+
+    input[type="text"], select {
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      margin: 5px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .checkbox-group {
+      margin: 10px 0;
+    }
+
+    .submit-btn {
+      background-color: red;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+  </style>
 </head>
+
 <body>
 
 <h1>FRC Match Scouting</h1>
 
-<!-- MATCH INFO -->
+<!-- Robot Info -->
 <div class="section">
-<h2>Match Info</h2>
-<input id="initials" placeholder="Initials (FML)">
-<input id="matchNumber" type="number" placeholder="Match #">
-<input id="teamNumber" placeholder="Team # (frc343)">
-<select id="alliancePos">
-<option value="">Alliance Position</option>
-<option>B1</option><option>B2</option><option>B3</option>
-<option>R1</option><option>R2</option><option>R3</option>
-</select>
+  <label>Robot Number</label>
+  <input type="text" id="robotNumber" placeholder="FRC 000" oninput="formatRobot(this)">
+
+  <label>Match Number</label>
+  <input type="text" id="matchNumber">
 </div>
 
-<!-- FIELD -->
+<!-- Auto Section -->
 <div class="section">
-<h2>Field Click Position</h2>
-<div class="field-wrapper">
-<img src="FieldImage.png" id="fieldImage">
-<div id="clickMarker"></div>
-</div>
-<p>X: <span id="fieldX">0.00</span> m |
-Y: <span id="fieldY">0.00</span> m</p>
+  <h2>Auto</h2>
+
+  <div class="counter">
+    <button onclick="changeCount('autoSpeaker', -1)">-</button>
+    <span id="autoSpeaker">0</span>
+    <button onclick="changeCount('autoSpeaker', 1)">+</button>
+  </div>
+  <label>Speaker</label>
+
+  <div class="counter">
+    <button onclick="changeCount('autoAmp', -1)">-</button>
+    <span id="autoAmp">0</span>
+    <button onclick="changeCount('autoAmp', 1)">+</button>
+  </div>
+  <label>Amp</label>
+
+  <div class="checkbox-group">
+    <label>
+      <input type="checkbox" id="autoClimber">
+      Climber Box (Auto)
+    </label>
+  </div>
 </div>
 
-<!-- AUTO -->
+<!-- Teleop Section -->
 <div class="section">
-<h2>Auto</h2>
+  <h2>Teleop</h2>
 
-<label>Starting Fuel</label><br>
-<select id="startingFuel">
-<option>0</option><option>1</option><option>2</option>
-<option>3</option><option>4</option><option>5</option>
-<option>6</option><option>7</option><option>8</option>
-</select>
+  <div class="counter">
+    <button onclick="changeCount('teleSpeaker', -1)">-</button>
+    <span id="teleSpeaker">0</span>
+    <button onclick="changeCount('teleSpeaker', 1)">+</button>
+  </div>
+  <label>Speaker</label>
 
-<div class="counter">Good:
-<button onclick="change('autoGood',-1)">-</button>
-<span id="autoGood">0</span>
-<button onclick="change('autoGood',1)">+</button></div>
-
-<div class="counter">Mid:
-<button onclick="change('autoMid',-1)">-</button>
-<span id="autoMid">0</span>
-<button onclick="change('autoMid',1)">+</button></div>
-
-<div class="counter">Bad:
-<button onclick="change('autoBad',-1)">-</button>
-<span id="autoBad">0</span>
-<button onclick="change('autoBad',1)">+</button></div>
-
-<div class="counter">Fail:
-<button onclick="change('autoFail',-1)">-</button>
-<span id="autoFail">0</span>
-<button onclick="change('autoFail',1)">+</button></div>
-
-<label><strong>Climber Box (Auto)</strong></label><br>
-<select id="autoClimb">
-<option>None</option><option>L1</option><option>L2</option><option>L3</option>
-</select>
+  <div class="counter">
+    <button onclick="changeCount('teleAmp', -1)">-</button>
+    <span id="teleAmp">0</span>
+    <button onclick="changeCount('teleAmp', 1)">+</button>
+  </div>
+  <label>Amp</label>
 </div>
 
-<!-- TELE -->
+<!-- Endgame Section -->
 <div class="section">
-<h2>Teleop</h2>
+  <h2>Endgame</h2>
 
-<div class="counter">Good:
-<button onclick="change('teleGood',-1)">-</button>
-<span id="teleGood">0</span>
-<button onclick="change('teleGood',1)">+</button></div>
+  <div class="checkbox-group">
+    <label>
+      <input type="checkbox" id="endClimbed">
+      Climbed
+    </label>
 
-<div class="counter">Mid:
-<button onclick="change('teleMid',-1)">-</button>
-<span id="teleMid">0</span>
-<button onclick="change('teleMid',1)">+</button></div>
+    <label>
+      <input type="checkbox" id="endTrapped">
+      Trapped
+    </label>
 
-<div class="counter">Bad:
-<button onclick="change('teleBad',-1)">-</button>
-<span id="teleBad">0</span>
-<button onclick="change('teleBad',1)">+</button></div>
-
-<div class="counter">Fail:
-<button onclick="change('teleFail',-1)">-</button>
-<span id="teleFail">0</span>
-<button onclick="change('teleFail',1)">+</button></div>
+    <label>
+      <input type="checkbox" id="endClimber">
+      Climber Box (Endgame)
+    </label>
+  </div>
 </div>
 
-<!-- ENDGAME -->
-<div class="section">
-<h2>Endgame</h2>
-
-<label><strong>Climber Box (Endgame)</strong></label><br>
-<select id="endClimb">
-<option>None</option><option>L1</option><option>L2</option><option>L3</option>
-</select>
-
-<br><br>
-
-<label>Kept Scoring?</label><br>
-<select id="keptScoring">
-<option>Yes</option><option>No</option>
-</select>
-
-<div class="counter">End Cycles:
-<button onclick="change('endCycles',-1)">-</button>
-<span id="endCycles">0</span>
-<button onclick="change('endCycles',1)">+</button></div>
-</div>
-
-<!-- NOTES -->
-<div class="section">
-<h2>Notes</h2>
-<textarea id="notes" rows="4" style="width:100%"></textarea>
-</div>
-
-<button onclick="submitData()">Submit</button>
+<button class="submit-btn" onclick="submitData()">Submit</button>
 
 <script>
 
-const API_URL = localStorage.getItem("API_URL");
-if (!API_URL) window.location.href = "index.html";
-
-const FIELD_WIDTH = 16.54;
-const FIELD_HEIGHT = 8.07;
-
-const fieldImg = document.getElementById("fieldImage");
-const marker = document.getElementById("clickMarker");
-
-fieldImg.addEventListener("click", function(event){
-  const rect = fieldImg.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-
-  const metersX = (x / rect.width) * FIELD_WIDTH;
-  const metersY = FIELD_HEIGHT - (y / rect.height) * FIELD_HEIGHT;
-
-  fieldX.innerText = metersX.toFixed(2);
-  fieldY.innerText = metersY.toFixed(2);
-
-  marker.style.left = x + "px";
-  marker.style.top = y + "px";
-  marker.style.display = "block";
-});
-
-function change(id, amount){
-  let el = document.getElementById(id);
-  let val = parseInt(el.innerText);
-  val += amount;
-  if(val < 0) val = 0;
-  el.innerText = val;
+function formatRobot(input) {
+  let value = input.value.toUpperCase().replace(/[^0-9]/g, '');
+  if (value.length > 0) {
+    input.value = "FRC " + value;
+  }
 }
 
-teamNumber.addEventListener("blur", function(){
-  let raw = this.value.toLowerCase().replace("frc","");
-  this.value = "FRC " + raw;
-});
-
-function resetForm(){
-  initials.value = "";
-  matchNumber.value = "";
-  teamNumber.value = "";
-  alliancePos.selectedIndex = 0;
-  startingFuel.selectedIndex = 0;
-  autoClimb.selectedIndex = 0;
-  endClimb.selectedIndex = 0;
-  keptScoring.selectedIndex = 0;
-  notes.value = "";
-  ["autoGood","autoMid","autoBad","autoFail",
-   "teleGood","teleMid","teleBad","teleFail",
-   "endCycles"].forEach(id => document.getElementById(id).innerText="0");
-  marker.style.display="none";
+function changeCount(id, amount) {
+  let element = document.getElementById(id);
+  let value = parseInt(element.innerText);
+  value += amount;
+  if (value < 0) value = 0;
+  element.innerText = value;
 }
 
-function submitData(){
-  const payload = {
-    timestamp: new Date().toISOString(),
-    initials: initials.value,
-    matchNumber: matchNumber.value,
-    teamNumber: teamNumber.value,
-    alliancePos: alliancePos.value,
-    fieldX: fieldX.innerText,
-    fieldY: fieldY.innerText,
-    startingFuel: startingFuel.value,
-    autoGood: autoGood.innerText,
-    autoMid: autoMid.innerText,
-    autoBad: autoBad.innerText,
-    autoFail: autoFail.innerText,
-    autoClimb: autoClimb.value,
-    teleGood: teleGood.innerText,
-    teleMid: teleMid.innerText,
-    teleBad: teleBad.innerText,
-    teleFail: teleFail.innerText,
-    endClimb: endClimb.value,
-    keptScoring: keptScoring.value,
-    endCycles: endCycles.innerText,
-    notes: notes.value
+function resetForm() {
+  document.getElementById("robotNumber").value = "";
+  document.getElementById("matchNumber").value = "";
+
+  document.getElementById("autoSpeaker").innerText = 0;
+  document.getElementById("autoAmp").innerText = 0;
+  document.getElementById("teleSpeaker").innerText = 0;
+  document.getElementById("teleAmp").innerText = 0;
+
+  document.getElementById("autoClimber").checked = false;
+  document.getElementById("endClimbed").checked = false;
+  document.getElementById("endTrapped").checked = false;
+  document.getElementById("endClimber").checked = false;
+}
+
+function submitData() {
+
+  const scriptURL = localStorage.getItem("webAppURL");
+
+  if (!scriptURL) {
+    alert("Web App URL not set. Please go back to index page.");
+    return;
+  }
+
+  const data = {
+    robotNumber: document.getElementById("robotNumber").value,
+    matchNumber: document.getElementById("matchNumber").value,
+    autoSpeaker: document.getElementById("autoSpeaker").innerText,
+    autoAmp: document.getElementById("autoAmp").innerText,
+    autoClimber: document.getElementById("autoClimber").checked,
+    teleSpeaker: document.getElementById("teleSpeaker").innerText,
+    teleAmp: document.getElementById("teleAmp").innerText,
+    endClimbed: document.getElementById("endClimbed").checked,
+    endTrapped: document.getElementById("endTrapped").checked,
+    endClimber: document.getElementById("endClimber").checked
   };
 
-  fetch(API_URL,{
-    method:"POST",
-    body: JSON.stringify(payload)
+  fetch(scriptURL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
   })
-  .then(res=>res.json())
-  .then(()=>{ alert("Submitted!"); resetForm(); })
-  .catch(()=>alert("Submission failed"));
+  .then(() => {
+    alert("Submitted Successfully!");
+    resetForm(); // Auto reset after submit
+  })
+  .catch(error => {
+    alert("Error submitting data.");
+    console.error(error);
+  });
 }
 
 </script>
