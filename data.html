@@ -1,0 +1,154 @@
+<script>
+
+function change(id, amount){
+    let el = document.getElementById(id);
+    let val = parseInt(el.innerText);
+    val += amount;
+    if(val < 0) val = 0;
+    el.innerText = val;
+}
+
+// Auto-format team number
+document.getElementById("teamNumber").addEventListener("blur", function(){
+    let raw = this.value.toLowerCase().replace("frc","");
+    this.value = "FRC " + raw;
+});
+
+function resetForm(){
+
+    // Text inputs
+    initials.value = "";
+    matchNumber.value = "";
+    teamNumber.value = "";
+
+    // Dropdowns
+    alliancePos.selectedIndex = 0;
+    startingFuel.selectedIndex = 0;
+    autoClimb.selectedIndex = 0;
+    teleClimb.selectedIndex = 0;
+    keptScoring.selectedIndex = 0;
+
+    // Counters
+    const counters = [
+        "autoGood","autoMid","autoBad","autoFail",
+        "teleGood","teleMid","teleBad","teleFail",
+        "endCycles"
+    ];
+
+    counters.forEach(id => {
+        document.getElementById(id).innerText = "0";
+    });
+
+    // Notes
+    notes.value = "";
+
+    // Focus next match entry
+    matchNumber.focus();
+}
+
+function submitData(){
+
+    const payload = {
+        timestamp: new Date().toISOString(),
+
+        initials: initials.value,
+        matchNumber: matchNumber.value,
+        teamNumber: teamNumber.value,
+        alliancePos: alliancePos.value,
+
+        startingFuel: startingFuel.value,
+
+        autoGood: autoGood.innerText,
+        autoMid: autoMid.innerText,
+        autoBad: autoBad.innerText,
+        autoFail: autoFail.innerText,
+        autoClimb: autoClimb.value,
+
+        teleGood: teleGood.innerText,
+        teleMid: teleMid.innerText,
+        teleBad: teleBad.innerText,
+        teleFail: teleFail.innerText,
+        teleClimb: teleClimb.value,
+
+        keptScoring: keptScoring.value,
+        endCycles: endCycles.innerText,
+
+        notes: notes.value
+    };
+
+    fetch("YOUR_WEB_APP_URL", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert("Submitted!");
+        resetForm();  // 🔥 Auto reset happens here
+    })
+    .catch(err => {
+        alert("Error submitting");
+    });
+}
+
+</script>
+
+<script>
+
+function change(id, amount){
+    let el = document.getElementById(id);
+    let val = parseInt(el.innerText);
+    val += amount;
+    if(val < 0) val = 0;
+    el.innerText = val;
+}
+
+// Auto-format team number
+document.getElementById("teamNumber").addEventListener("blur", function(){
+    let raw = this.value.toLowerCase().replace("frc","");
+    this.value = "FRC " + raw;
+});
+
+function submitData(){
+
+    const payload = {
+        timestamp: new Date().toISOString(),
+
+        initials: initials.value,
+        matchNumber: matchNumber.value,
+        teamNumber: teamNumber.value,
+        alliancePos: alliancePos.value,
+
+        startingFuel: startingFuel.value,
+
+        autoGood: autoGood.innerText,
+        autoMid: autoMid.innerText,
+        autoBad: autoBad.innerText,
+        autoFail: autoFail.innerText,
+        autoClimb: autoClimb.value,
+
+        teleGood: teleGood.innerText,
+        teleMid: teleMid.innerText,
+        teleBad: teleBad.innerText,
+        teleFail: teleFail.innerText,
+        teleClimb: teleClimb.value,
+
+        keptScoring: keptScoring.value,
+        endCycles: endCycles.innerText,
+
+        notes: notes.value
+    };
+
+    fetch("YOUR_WEB_APP_URL", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.text())
+    .then(data => {
+        alert("Submitted!");
+    })
+    .catch(err => {
+        alert("Error submitting");
+    });
+}
+
+</script>
