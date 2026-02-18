@@ -1,3 +1,124 @@
+<div class="data">
+
+<!-- MATCH INFO FORM -->
+<form id="matchForm">
+    <h2>Match Info</h2>
+
+    <input id="initials" placeholder="Initials (FML)" required>
+    <input id="matchNumber" type="number" placeholder="Match #" required>
+    <input id="teamNumber" placeholder="Team # (ex: frc343)" required>
+
+    <select id="alliancePos">
+        <option value="">Alliance Position</option>
+        <option>B1</option>
+        <option>B2</option>
+        <option>B3</option>
+        <option>R1</option>
+        <option>R2</option>
+        <option>R3</option>
+    </select>
+</form>
+
+<hr>
+
+<!-- AUTO FORM -->
+<form id="autoForm">
+    <h2>Auto</h2>
+
+    <label>Starting Fuel</label>
+    <select id="startingFuel">
+        ${[...Array(9).keys()].map(n => `<option>${n}</option>`).join("")}
+    </select>
+
+    <div>Good: <button type="button" onclick="change('autoGood',-1)">-</button>
+        <span id="autoGood">0</span>
+        <button type="button" onclick="change('autoGood',1)">+</button>
+    </div>
+
+    <div>Mid: <button type="button" onclick="change('autoMid',-1)">-</button>
+        <span id="autoMid">0</span>
+        <button type="button" onclick="change('autoMid',1)">+</button>
+    </div>
+
+    <div>Bad: <button type="button" onclick="change('autoBad',-1)">-</button>
+        <span id="autoBad">0</span>
+        <button type="button" onclick="change('autoBad',1)">+</button>
+    </div>
+
+    <div>Fail: <button type="button" onclick="change('autoFail',-1)">-</button>
+        <span id="autoFail">0</span>
+        <button type="button" onclick="change('autoFail',1)">+</button>
+    </div>
+
+    <select id="autoClimb">
+        <option>None</option>
+        <option>L1</option>
+        <option>L2</option>
+        <option>L3</option>
+    </select>
+</form>
+
+<hr>
+
+<!-- TELE FORM -->
+<form id="teleForm">
+    <h2>Teleop</h2>
+
+    <div>Good: <button type="button" onclick="change('teleGood',-1)">-</button>
+        <span id="teleGood">0</span>
+        <button type="button" onclick="change('teleGood',1)">+</button>
+    </div>
+
+    <div>Mid: <button type="button" onclick="change('teleMid',-1)">-</button>
+        <span id="teleMid">0</span>
+        <button type="button" onclick="change('teleMid',1)">+</button>
+    </div>
+
+    <div>Bad: <button type="button" onclick="change('teleBad',-1)">-</button>
+        <span id="teleBad">0</span>
+        <button type="button" onclick="change('teleBad',1)">+</button>
+    </div>
+
+    <div>Fail: <button type="button" onclick="change('teleFail',-1)">-</button>
+        <span id="teleFail">0</span>
+        <button type="button" onclick="change('teleFail',1)">+</button>
+    </div>
+
+    <select id="teleClimb">
+        <option>None</option>
+        <option>L1</option>
+        <option>L2</option>
+        <option>L3</option>
+    </select>
+</form>
+
+<hr>
+
+<!-- ENDGAME -->
+<form id="endForm">
+    <h2>Endgame</h2>
+
+    <select id="keptScoring">
+        <option>Yes</option>
+        <option>No</option>
+    </select>
+
+    <div>End Cycles:
+        <button type="button" onclick="change('endCycles',-1)">-</button>
+        <span id="endCycles">0</span>
+        <button type="button" onclick="change('endCycles',1)">+</button>
+    </div>
+</form>
+
+<hr>
+
+<textarea id="notes" placeholder="Notes..." rows="4" style="width:100%"></textarea>
+
+<br><br>
+<button onclick="submitData()">Submit</button>
+
+</div>
+
 <script>
 
 function change(id, amount){
