@@ -1,183 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scouting Data</title>
-
+<title>Match Scouting</title>
 <style>
-body {
-  background:#111;
-  color:white;
-  font-family:Arial;
-  padding:20px;
+
+body { background:#111; color:white; font-family:Arial; padding:20px; }
+.section { border:1px solid #444; padding:15px; margin-bottom:20px; }
+button { padding:5px 10px; }
+.counter { margin:5px 0; }
+select, input, textarea { margin:5px 0; padding:6px; }
+
+.field-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
 }
 
-.section {
-  border:1px solid #444;
-  padding:15px;
-  margin-bottom:20px;
+#fieldImage {
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+  border: 2px solid #555;
 }
 
-button {
-  padding:5px 10px;
+#clickMarker {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: lime;
+  border: 2px solid black;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  display: none;
 }
 
-.counter {
-  margin:5px 0;
-}
-
-select, input, textarea {
-  margin:5px 0;
-  padding:6px;
-}
 </style>
 </head>
-
 <body>
 
-<h1>Match Scouting</h1>
+<h1>FRC Match Scouting</h1>
 
 <!-- MATCH INFO -->
 <div class="section">
-  <h2>Match Info</h2>
+<h2>Match Info</h2>
+<input id="initials" placeholder="Initials (FML)">
+<input id="matchNumber" type="number" placeholder="Match #">
+<input id="teamNumber" placeholder="Team # (frc343)">
+<select id="alliancePos">
+<option value="">Alliance Position</option>
+<option>B1</option><option>B2</option><option>B3</option>
+<option>R1</option><option>R2</option><option>R3</option>
+</select>
+</div>
 
-  <input id="initials" placeholder="Initials (FML)">
-  <input id="matchNumber" type="number" placeholder="Match #">
-  <input id="teamNumber" placeholder="Team # (frc343)">
-
-  <select id="alliancePos">
-    <option value="">Alliance Position</option>
-    <option>B1</option>
-    <option>B2</option>
-    <option>B3</option>
-    <option>R1</option>
-    <option>R2</option>
-    <option>R3</option>
-  </select>
+<!-- FIELD -->
+<div class="section">
+<h2>Field Click Position</h2>
+<div class="field-wrapper">
+<img src="FieldImage.png" id="fieldImage">
+<div id="clickMarker"></div>
+</div>
+<p>X: <span id="fieldX">0.00</span> m |
+Y: <span id="fieldY">0.00</span> m</p>
 </div>
 
 <!-- AUTO -->
 <div class="section">
-  <h2>Auto</h2>
+<h2>Auto</h2>
 
-  <label>Starting Fuel</label><br>
-  <select id="startingFuel">
-    <option>0</option><option>1</option><option>2</option>
-    <option>3</option><option>4</option><option>5</option>
-    <option>6</option><option>7</option><option>8</option>
-  </select>
+<label>Starting Fuel</label><br>
+<select id="startingFuel">
+<option>0</option><option>1</option><option>2</option>
+<option>3</option><option>4</option><option>5</option>
+<option>6</option><option>7</option><option>8</option>
+</select>
 
-  <div class="counter">
-    Good: <button onclick="change('autoGood',-1)">-</button>
-    <span id="autoGood">0</span>
-    <button onclick="change('autoGood',1)">+</button>
-  </div>
+<div class="counter">Good:
+<button onclick="change('autoGood',-1)">-</button>
+<span id="autoGood">0</span>
+<button onclick="change('autoGood',1)">+</button></div>
 
-  <div class="counter">
-    Mid: <button onclick="change('autoMid',-1)">-</button>
-    <span id="autoMid">0</span>
-    <button onclick="change('autoMid',1)">+</button>
-  </div>
+<div class="counter">Mid:
+<button onclick="change('autoMid',-1)">-</button>
+<span id="autoMid">0</span>
+<button onclick="change('autoMid',1)">+</button></div>
 
-  <div class="counter">
-    Bad: <button onclick="change('autoBad',-1)">-</button>
-    <span id="autoBad">0</span>
-    <button onclick="change('autoBad',1)">+</button>
-  </div>
+<div class="counter">Bad:
+<button onclick="change('autoBad',-1)">-</button>
+<span id="autoBad">0</span>
+<button onclick="change('autoBad',1)">+</button></div>
 
-  <div class="counter">
-    Fail: <button onclick="change('autoFail',-1)">-</button>
-    <span id="autoFail">0</span>
-    <button onclick="change('autoFail',1)">+</button>
-  </div>
+<div class="counter">Fail:
+<button onclick="change('autoFail',-1)">-</button>
+<span id="autoFail">0</span>
+<button onclick="change('autoFail',1)">+</button></div>
 
-  <br>
-  <label><strong>Climber Box (Auto)</strong></label><br>
-  <select id="autoClimb">
-    <option>None</option>
-    <option>L1</option>
-    <option>L2</option>
-    <option>L3</option>
-  </select>
+<label><strong>Climber Box (Auto)</strong></label><br>
+<select id="autoClimb">
+<option>None</option><option>L1</option><option>L2</option><option>L3</option>
+</select>
 </div>
 
 <!-- TELE -->
 <div class="section">
-  <h2>Teleop</h2>
+<h2>Teleop</h2>
 
-  <div class="counter">
-    Good: <button onclick="change('teleGood',-1)">-</button>
-    <span id="teleGood">0</span>
-    <button onclick="change('teleGood',1)">+</button>
-  </div>
+<div class="counter">Good:
+<button onclick="change('teleGood',-1)">-</button>
+<span id="teleGood">0</span>
+<button onclick="change('teleGood',1)">+</button></div>
 
-  <div class="counter">
-    Mid: <button onclick="change('teleMid',-1)">-</button>
-    <span id="teleMid">0</span>
-    <button onclick="change('teleMid',1)">+</button>
-  </div>
+<div class="counter">Mid:
+<button onclick="change('teleMid',-1)">-</button>
+<span id="teleMid">0</span>
+<button onclick="change('teleMid',1)">+</button></div>
 
-  <div class="counter">
-    Bad: <button onclick="change('teleBad',-1)">-</button>
-    <span id="teleBad">0</span>
-    <button onclick="change('teleBad',1)">+</button>
-  </div>
+<div class="counter">Bad:
+<button onclick="change('teleBad',-1)">-</button>
+<span id="teleBad">0</span>
+<button onclick="change('teleBad',1)">+</button></div>
 
-  <div class="counter">
-    Fail: <button onclick="change('teleFail',-1)">-</button>
-    <span id="teleFail">0</span>
-    <button onclick="change('teleFail',1)">+</button>
-  </div>
+<div class="counter">Fail:
+<button onclick="change('teleFail',-1)">-</button>
+<span id="teleFail">0</span>
+<button onclick="change('teleFail',1)">+</button></div>
 </div>
 
 <!-- ENDGAME -->
 <div class="section">
-  <h2>Endgame</h2>
+<h2>Endgame</h2>
 
-  <label><strong>Climber Box (Endgame)</strong></label><br>
-  <select id="endClimb">
-    <option>None</option>
-    <option>L1</option>
-    <option>L2</option>
-    <option>L3</option>
-  </select>
+<label><strong>Climber Box (Endgame)</strong></label><br>
+<select id="endClimb">
+<option>None</option><option>L1</option><option>L2</option><option>L3</option>
+</select>
 
-  <br><br>
+<br><br>
 
-  <label>Kept Scoring?</label><br>
-  <select id="keptScoring">
-    <option>Yes</option>
-    <option>No</option>
-  </select>
+<label>Kept Scoring?</label><br>
+<select id="keptScoring">
+<option>Yes</option><option>No</option>
+</select>
 
-  <div class="counter">
-    End Cycles:
-    <button onclick="change('endCycles',-1)">-</button>
-    <span id="endCycles">0</span>
-    <button onclick="change('endCycles',1)">+</button>
-  </div>
+<div class="counter">End Cycles:
+<button onclick="change('endCycles',-1)">-</button>
+<span id="endCycles">0</span>
+<button onclick="change('endCycles',1)">+</button></div>
 </div>
 
 <!-- NOTES -->
 <div class="section">
-  <h2>Notes</h2>
-  <textarea id="notes" rows="4" style="width:100%"></textarea>
+<h2>Notes</h2>
+<textarea id="notes" rows="4" style="width:100%"></textarea>
 </div>
 
 <button onclick="submitData()">Submit</button>
 
 <script>
 
-// Grab stored API URL
 const API_URL = localStorage.getItem("API_URL");
+if (!API_URL) window.location.href = "index.html";
 
-if (!API_URL) {
-  alert("No API URL found. Redirecting...");
-  window.location.href = "index.html";
-}
+const FIELD_WIDTH = 16.54;
+const FIELD_HEIGHT = 8.07;
 
-// Counter logic
+const fieldImg = document.getElementById("fieldImage");
+const marker = document.getElementById("clickMarker");
+
+fieldImg.addEventListener("click", function(event){
+  const rect = fieldImg.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  const metersX = (x / rect.width) * FIELD_WIDTH;
+  const metersY = FIELD_HEIGHT - (y / rect.height) * FIELD_HEIGHT;
+
+  fieldX.innerText = metersX.toFixed(2);
+  fieldY.innerText = metersY.toFixed(2);
+
+  marker.style.left = x + "px";
+  marker.style.top = y + "px";
+  marker.style.display = "block";
+});
+
 function change(id, amount){
   let el = document.getElementById(id);
   let val = parseInt(el.innerText);
@@ -186,80 +193,59 @@ function change(id, amount){
   el.innerText = val;
 }
 
-// Auto-format team number
-document.getElementById("teamNumber").addEventListener("blur", function(){
+teamNumber.addEventListener("blur", function(){
   let raw = this.value.toLowerCase().replace("frc","");
   this.value = "FRC " + raw;
 });
 
 function resetForm(){
-
   initials.value = "";
   matchNumber.value = "";
   teamNumber.value = "";
-
   alliancePos.selectedIndex = 0;
   startingFuel.selectedIndex = 0;
   autoClimb.selectedIndex = 0;
   endClimb.selectedIndex = 0;
   keptScoring.selectedIndex = 0;
-
-  const counters = [
-    "autoGood","autoMid","autoBad","autoFail",
-    "teleGood","teleMid","teleBad","teleFail",
-    "endCycles"
-  ];
-
-  counters.forEach(id => {
-    document.getElementById(id).innerText = "0";
-  });
-
   notes.value = "";
-  matchNumber.focus();
+  ["autoGood","autoMid","autoBad","autoFail",
+   "teleGood","teleMid","teleBad","teleFail",
+   "endCycles"].forEach(id => document.getElementById(id).innerText="0");
+  marker.style.display="none";
 }
 
 function submitData(){
-
   const payload = {
     timestamp: new Date().toISOString(),
-
     initials: initials.value,
     matchNumber: matchNumber.value,
     teamNumber: teamNumber.value,
     alliancePos: alliancePos.value,
-
+    fieldX: fieldX.innerText,
+    fieldY: fieldY.innerText,
     startingFuel: startingFuel.value,
-
     autoGood: autoGood.innerText,
     autoMid: autoMid.innerText,
     autoBad: autoBad.innerText,
     autoFail: autoFail.innerText,
     autoClimb: autoClimb.value,
-
     teleGood: teleGood.innerText,
     teleMid: teleMid.innerText,
     teleBad: teleBad.innerText,
     teleFail: teleFail.innerText,
-
     endClimb: endClimb.value,
     keptScoring: keptScoring.value,
     endCycles: endCycles.innerText,
-
     notes: notes.value
   };
 
-  fetch(API_URL, {
-    method: "POST",
+  fetch(API_URL,{
+    method:"POST",
     body: JSON.stringify(payload)
   })
-  .then(res => res.json())
-  .then(() => {
-    alert("Submitted!");
-    resetForm();
-  })
-  .catch(() => {
-    alert("Submission failed.");
-  });
+  .then(res=>res.json())
+  .then(()=>{ alert("Submitted!"); resetForm(); })
+  .catch(()=>alert("Submission failed"));
 }
 
 </script>
